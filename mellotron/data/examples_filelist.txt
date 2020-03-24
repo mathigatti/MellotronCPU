@@ -1,0 +1,2 @@
+/content/boy.wav|beautiful beautiful beautiful beautiful boy|0
+/content/mellotron/data/example2.wav|and all the species that call it home|0

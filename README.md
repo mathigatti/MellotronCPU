@@ -10,7 +10,7 @@ Mellotron singing synthesizer using CPU
 ## Usage
 
 
-```
+```python
 from run_mellotron import *
 model = init_model()
 

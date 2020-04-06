@@ -53,12 +53,12 @@
       </score-part>
     </part-list>
   <part id="P1">
-    <measure number="1" width="507.76">
+    <measure number="1" width="477.57">
       <print>
         <system-layout>
           <system-margins>
             <left-margin>-0.00</left-margin>
-            <right-margin>569.41</right-margin>
+            <right-margin>599.59</right-margin>
             </system-margins>
           <top-system-distance>170.00</top-system-distance>
           </system-layout>
@@ -99,10 +99,10 @@
           <tuplet type="start" bracket="yes"/>
           </notations>
         </note>
-      <note default-x="147.79" default-y="-45.00" dynamics="111.11">
+      <note default-x="142.76" default-y="-110.00" dynamics="111.11">
         <pitch>
-          <step>D</step>
-          <octave>4</octave>
+          <step>E</step>
+          <octave>2</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
@@ -117,10 +117,10 @@
           <text>Hi</text>
           </lyric>
         </note>
-      <note default-x="219.46" default-y="-55.00" dynamics="111.11">
+      <note default-x="209.40" default-y="-95.00" dynamics="111.11">
         <pitch>
-          <step>B</step>
-          <octave>3</octave>
+          <step>A</step>
+          <octave>2</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
@@ -138,10 +138,10 @@
           <text>He</text>
           </lyric>
         </note>
-      <note default-x="291.13" default-y="-45.00" dynamics="111.11">
+      <note default-x="276.04" default-y="-90.00" dynamics="111.11">
         <pitch>
-          <step>D</step>
-          <octave>4</octave>
+          <step>B</step>
+          <octave>2</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
@@ -159,10 +159,10 @@
           <text>llo</text>
           </lyric>
         </note>
-      <note default-x="362.81" default-y="-40.00" dynamics="111.11">
+      <note default-x="342.69" default-y="-70.00" dynamics="111.11">
         <pitch>
-          <step>E</step>
-          <octave>4</octave>
+          <step>F</step>
+          <octave>3</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
@@ -174,13 +174,13 @@
         <stem>up</stem>
         <lyric number="1">
           <syllabic>single</syllabic>
-          <text>How</text>
+          <text>I</text>
           </lyric>
         </note>
-      <note default-x="434.48" default-y="-30.00" dynamics="111.11">
+      <note default-x="409.33" default-y="-65.00" dynamics="111.11">
         <pitch>
           <step>G</step>
-          <octave>4</octave>
+          <octave>3</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
@@ -195,7 +195,7 @@
           </notations>
         <lyric number="1">
           <syllabic>single</syllabic>
-          <text>Are</text>
+          <text>Am</text>
           </lyric>
         </note>
       </measure>

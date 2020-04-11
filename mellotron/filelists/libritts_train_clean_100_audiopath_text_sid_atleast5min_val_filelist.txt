@@ -1,3 +1,4 @@
+path|text|ID
 /path_to_libritts/7367/86737/7367_86737_000132_000020.wav|There was some surprise, however, that, as he was with his face to the enemy, he should have received a ball between his shoulders. That astonishment ceased when one of the brigands remarked to his comrades that Cucumetto was stationed ten paces in Carlini's rear when he fell.|7367
 /path_to_libritts/7511/102419/7511_102419_000020_000000.wav|Mr. Stewart is the queerest man: instead of letting me enjoy the tableau, he solemnly drove on, saying he would not want any one gawking at him if he were the happy man.|7511
 /path_to_libritts/7078/271888/7078_271888_000062_000000.wav|"It is a strange fancy of mine," she explained, when I had greeted her. "I'm sure the dress is very becoming--isn't it?" And she waved the goblet she was holding above her head.|7078

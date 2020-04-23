@@ -33,7 +33,7 @@ def init_model():
 
 
 
-def synthesize1(filename, model, bpm=80, speaker_id=1, outname="sample.wav"):
+def synthesize1(filename, model, bpm=80, speaker_id=14, outname="sample.wav"):
 	tacotron, waveglow, denoiser = model
 	data = get_data_from_musicxml(filename, bpm)
 
@@ -80,7 +80,7 @@ def load_mel(path):
 	melspec = melspec.cpu()
 	return melspec
 
-def synthesize2(model, audio_path, text, source_speaker_id, target_speaker_id=1, outname="sample.wav"):
+def synthesize2(model, audio_path, text, source_speaker_id, target_speaker_id, outname="sample.wav"):
 	tacotron, waveglow, denoiser = model
 	with open('temp.txt','w') as f:
 		f.write(f"{audio_path}|{text}|{source_speaker_id}")

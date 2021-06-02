@@ -19,6 +19,8 @@ from .numbers import normalize_numbers
 
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r'\s+')
+_punctuation_re = re.compile(r'[()!@#$%^&*+?/,.;\"\'\[\]]')
+_dash_re = re.compile(r'[-]')
 
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in [
@@ -64,6 +66,12 @@ def collapse_whitespace(text):
 def convert_to_ascii(text):
   return unidecode(text)
 
+def replace_dash(text):
+  return re.sub(_dash_re, '', text)
+
+
+def collapse_punctuation(text):
+  return re.sub(_punctuation_re, '', text)
 
 def basic_cleaners(text):
   '''Basic pipeline that lowercases and collapses whitespace without transliteration.'''
@@ -87,4 +95,6 @@ def english_cleaners(text):
   text = expand_numbers(text)
   text = expand_abbreviations(text)
   text = collapse_whitespace(text)
+  text = collapse_punctuation(text)
+  text = replace_dash(text)
   return text

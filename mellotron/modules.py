@@ -57,7 +57,8 @@ class ReferenceEncoder(nn.Module):
         self.n_mel_channels = hp.n_mel_channels
         self.ref_enc_gru_size = hp.ref_enc_gru_size
 
-    def forward(self, inputs):
+    def forward(self, inputs, input_lengths=None):
+        assert inputs.size(-1) % self.n_mel_channels == 0
         out = inputs.view(inputs.size(0), 1, -1, self.n_mel_channels)
         for conv, bn in zip(self.convs, self.bns):
             out = conv(out)
@@ -68,6 +69,13 @@ class ReferenceEncoder(nn.Module):
         N, T = out.size(0), out.size(1)
         out = out.contiguous().view(N, T, -1)  # [N, Ty//2^K, 128*n_mels//2^K]
 
+        if input_lengths is not None:
+            input_lengths = torch.ceil(input_lengths.float() / 2 ** len(self.convs))
+            input_lengths = input_lengths.cpu().numpy().astype(int)           
+            out = nn.utils.rnn.pack_padded_sequence(
+                        out, input_lengths, batch_first=True, enforce_sorted=False)
+
+        self.gru.flatten_parameters()
         _, out = self.gru(out)
         return out.squeeze(0)
 
@@ -84,7 +92,7 @@ class STL(nn.Module):
     def __init__(self, hp):
         super().__init__()
         self.embed = nn.Parameter(torch.FloatTensor(hp.token_num, hp.token_embedding_size // hp.num_heads))
-        d_q = hp.token_embedding_size // 2
+        d_q = hp.ref_enc_gru_size
         d_k = hp.token_embedding_size // hp.num_heads
         self.attention = MultiHeadAttention(
             query_dim=d_q, key_dim=d_k, num_units=hp.token_embedding_size,
@@ -147,8 +155,8 @@ class GST(nn.Module):
         self.encoder = ReferenceEncoder(hp)
         self.stl = STL(hp)
 
-    def forward(self, inputs):
-        enc_out = self.encoder(inputs)
+    def forward(self, inputs, input_lengths=None):
+        enc_out = self.encoder(inputs, input_lengths=input_lengths)
         style_embed = self.stl(enc_out)
 
         return style_embed

@@ -11,6 +11,7 @@ _id_to_symbol = {i: s for i, s in enumerate(symbols)}
 
 # Regular expression matching text enclosed in curly braces:
 _curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
+_words_re = re.compile(r"([a-zA-ZÀ-ž]+['][a-zA-ZÀ-ž]{1,2}|[a-zA-ZÀ-ž]+)|([{][^}]+[}]|[^a-zA-ZÀ-ž{}]+)")
 
 
 def get_arpabet(word, dictionary):
@@ -37,16 +38,17 @@ def text_to_sequence(text, cleaner_names, dictionary=None, p_arpabet=1.0):
   '''
   sequence = []
 
-  space = _symbols_to_sequence(' ')
   # Check for curly braces and treat their contents as ARPAbet:
   while len(text):
     m = _curly_re.match(text)
     if not m:
       clean_text = _clean_text(text, cleaner_names)
-      if cmudict is not None:
-        clean_text = [get_arpabet(w, dictionary) 
-                      if random.random() < p_arpabet else w 
-                      for w in clean_text.split(" ")]
+      if dictionary is not None:
+        words = _words_re.findall(text)
+        clean_text = [
+          get_arpabet(word[0], dictionary)
+          if ((word[0] != '') and random.random() < p_arpabet) else word[1]
+          for word in words]
 
         for i in range(len(clean_text)):
             t = clean_text[i]
@@ -54,18 +56,15 @@ def text_to_sequence(text, cleaner_names, dictionary=None, p_arpabet=1.0):
               sequence += _arpabet_to_sequence(t[1:-1])
             else:
               sequence +=  _symbols_to_sequence(t)
-            sequence += space
+            #sequence += space
       else:
         sequence += _symbols_to_sequence(clean_text)
       break
 
-    clean_text = _clean_text(text, cleaner_names)
-    sequence += _symbols_to_sequence(_clean_text(m.group(1), cleaner_names))
+    sequence += text_to_sequence(m.group(1), cleaner_names, dictionary, p_arpabet)
     sequence += _arpabet_to_sequence(m.group(2))
     text = m.group(3)
 
-  # remove trailing space
-  sequence = sequence[:-1] if sequence[-1] == space[0] else sequence
   return sequence
 
 
@@ -73,8 +72,8 @@ def sequence_to_text(sequence):
   '''Converts a sequence of IDs back to a string'''
   result = ''
   for symbol_id in sequence:
-    if symbol_id in _id_to_symbol:
-      s = _id_to_symbol[symbol_id]
+    if symbol_id.item() in _id_to_symbol:
+      s = _id_to_symbol[symbol_id.item()]
       # Enclose ARPAbet back in curly braces:
       if len(s) > 1 and s[0] == '@':
         s = '{%s}' % s[1:]

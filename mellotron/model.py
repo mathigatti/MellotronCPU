@@ -184,10 +184,20 @@ class Encoder(nn.Module):
                             batch_first=True, bidirectional=True)
 
     def forward(self, x, input_lengths):
-        for conv in self.convolutions:
-            x = F.dropout(F.relu(conv(x)), drop_rate, self.training)
+        if x.size()[0] > 1:
+            print("here")
+            x_embedded = []
+            for b_ind in range(x.size()[0]):  # TODO: Speed up
+                curr_x = x[b_ind:b_ind+1, :, :input_lengths[b_ind]].clone()
+                for conv in self.convolutions:
+                    curr_x = F.dropout(F.relu(conv(curr_x)), drop_rate, self.training)
+                x_embedded.append(curr_x[0].transpose(0, 1))
+            x = torch.nn.utils.rnn.pad_sequence(x_embedded, batch_first=True)
+        else:
+            for conv in self.convolutions:
+                x = F.dropout(F.relu(conv(x)), drop_rate, self.training)
+            x = x.transpose(1, 2)
 
-        x = x.transpose(1, 2)
 
         # pytorch tensor are not reversible, hence the conversion
         input_lengths = input_lengths.cpu().numpy()
@@ -383,8 +393,6 @@ class Decoder(nn.Module):
             cell_input, (self.attention_hidden, self.attention_cell))
         self.attention_hidden = F.dropout(
             self.attention_hidden, self.p_attention_dropout, self.training)
-        self.attention_cell = F.dropout(
-            self.attention_cell, self.p_attention_dropout, self.training)
 
         attention_weights_cat = torch.cat(
             (self.attention_weights.unsqueeze(1),
@@ -400,8 +408,6 @@ class Decoder(nn.Module):
             decoder_input, (self.decoder_hidden, self.decoder_cell))
         self.decoder_hidden = F.dropout(
             self.decoder_hidden, self.p_decoder_dropout, self.training)
-        self.decoder_cell = F.dropout(
-            self.decoder_cell, self.p_decoder_dropout, self.training)
 
         decoder_hidden_attention_context = torch.cat(
             (self.decoder_hidden, self.attention_context), dim=1)
@@ -601,7 +607,7 @@ class Tacotron2(nn.Module):
         embedded_inputs = self.embedding(inputs).transpose(1, 2)
         embedded_text = self.encoder(embedded_inputs, input_lengths)
         embedded_speakers = self.speaker_embedding(speaker_ids)[:, None]
-        embedded_gst = self.gst(targets)
+        embedded_gst = self.gst(targets.transpose(1, 2), output_lengths)
         embedded_gst = embedded_gst.repeat(1, embedded_text.size(1), 1)
         embedded_speakers = embedded_speakers.repeat(1, embedded_text.size(1), 1)
 

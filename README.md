@@ -8,7 +8,7 @@ Download pretrained model checkpoints from nvidia/mellotron repository and speci
 
 ## Usage
 
-Check `Playground.ipyng`
+Check [this](https://colab.research.google.com/drive/1D94n11Cjvlk-O4o8vfdGD2bjH-yoMXgS#scrollTo=EBMBdLEa1Uii) Google Colab.
 
 
 ### About musicXML Format

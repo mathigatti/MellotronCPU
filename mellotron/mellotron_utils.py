@@ -204,6 +204,7 @@ def adjust_consonant_lengths(events, phoneme_durations):
 
 
 def adjust_consonants(events, phoneme_durations):
+    print(events)
     if len(events) == 1:
         return events
 
@@ -488,6 +489,9 @@ def get_data_from_musicxml(filepath, bpm, phoneme_durations=None,
         alignment = torch.from_numpy(alignment).permute(1, 0)[:, None].float()
         f0s = torch.from_numpy(f0s)[None].float()
         text_encoded = torch.LongTensor(text_encoded)[None]
+
+        alignment= alignment[:,:,:text_encoded.shape[-1]]
+
         data[k] = {'rhythm': alignment,
                    'pitch_contour': f0s,
                    'text_encoded': text_encoded}

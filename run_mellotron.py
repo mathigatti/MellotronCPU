@@ -42,7 +42,8 @@ def panner(signal, angle):
 def init_model():
 	hparams = create_hparams()
 
-	checkpoint_path = "checkpoints/mellotron_libritts.pt"
+	checkpoint_path = "checkpoints/mellotron_ljs.pt"
+	#checkpoint_path = "checkpoints/mellotron_libritts.pt"
 	tacotron = load_model(hparams).cpu().eval()
 	tacotron.load_state_dict(torch.load(checkpoint_path,map_location=torch.device('cpu'))['state_dict'])
 
@@ -69,8 +70,8 @@ def synthesize1(filename, bpm=80, speaker_id=14, outname="sample.wav"):
 	speaker_id = torch.LongTensor([speaker_id]).cpu()
 
 	with torch.no_grad():
-		some_number_i_dont_know_what_is_this = 0 # Seems to be a number from 0 to 10
-		mel_outputs, mel_outputs_postnet, gate_outputs, alignments_transfer = tacotron.inference_noattention((text_encoded, some_number_i_dont_know_what_is_this, speaker_id, pitch_contour*frequency_scaling, rhythm))
+		style_input = 0 # Seems to be a number from 0 to 10
+		mel_outputs, mel_outputs_postnet, gate_outputs, alignments_transfer = tacotron.inference_noattention((text_encoded, style_input, speaker_id, pitch_contour*frequency_scaling, rhythm))
 		audio = denoiser(waveglow.infer(mel_outputs_postnet, sigma=0.66), 0.01)[0, 0]
 		audio = audio.cpu().numpy()
 		pan = 0
